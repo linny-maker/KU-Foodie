@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KU Foodie - 고려대학교 맛집 추천</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-main">
+        <div class="logo-area">
+          <span class="univ-badge">KOREA UNIV.</span>
+          <h1>KU <span class="highlight">Foodie</span></h1>
+          <p class="subtitle">고려대 구성원을 위한 정성스러운 맛집 큐레이팅</p>
+        </div>
+        <!-- Web version doesn't need CSV sync panel -->
+      </div>
+    </header>
+
+    <!-- Keyword Selector Section -->
+    <section class="keyword-section">
+      <h2 class="section-title">오늘 어떤 자리가 예정되어 있나요?</h2>
+      <p class="section-subtitle">원하는 키워드를 클릭하시면 정성스러운 추천이 시작됩니다.</p>
+      <div class="keyword-grid">
+        <div class="keyword-card" data-keyword="밥약">
+          <div class="keyword-icon">🤝</div>
+          <h3>밥약</h3>
+          <p>선배·후배와의 첫 만남, 기분 좋은 밥 한끼</p>
+        </div>
+        <div class="keyword-card" data-keyword="뒤풀이">
+          <div class="keyword-icon">🍻</div>
+          <h3>뒤풀이</h3>
+          <p>동아리·학회 행사 후 다 함께 즐기는 시끌벅적한 시간</p>
+        </div>
+        <div class="keyword-card" data-keyword="혼밥">
+          <div class="keyword-icon">🍱</div>
+          <h3>혼밥</h3>
+          <p>수업 사이 나 홀로 즐기는 편안하고 맛있는 식사</p>
+        </div>
+        <div class="keyword-card" data-keyword="카공">
+          <div class="keyword-icon">💻</div>
+          <h3>카공</h3>
+          <p>노트북과 전공서적을 펴고 달콤한 디저트와 함께</p>
+        </div>
+        <div class="keyword-card" data-keyword="데이트">
+          <div class="keyword-icon">🌹</div>
+          <h3>데이트</h3>
+          <p>분위기 좋은 곳에서 소중한 사람과의 특별한 시간</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommendation Dashboard (Shown after keyword selected) -->
+    <main class="recommendation-dashboard hidden" id="recommendation-dashboard">
+      
+      <!-- 1. Today's Pick (Featured Recommendation) -->
+      <section class="today-pick-section">
+        <div class="badge-accent">TODAY'S SPECIAL PICK</div>
+        
+        <!-- Interactive Roulette Container -->
+        <div class="roulette-container" id="roulette-container">
+          <div class="roulette-inner">
+            <div class="roulette-title">🐯 호랑이의 맛집 룰렛 돌리는 중...</div>
+            <div class="roulette-display-wrapper">
+              <div class="roulette-wheel" id="roulette-wheel">
+                <!-- Names will spin here -->
+              </div>
+            </div>
+            <p class="roulette-help">잠시만 기다리시면 오늘을 위한 맛집이 선정됩니다!</p>
+          </div>
+        </div>
+
+        <!-- Result Card & Course Recommendation -->
+        <div class="recommendation-result-container hidden" id="recommendation-result-container">
+          <div class="today-pick-card" id="today-pick-card">
+            <!-- Dynamically populated -->
+          </div>
+          
+          <!-- Course Recommendation Area -->
+          <div class="course-section" id="course-section">
+            <div class="course-header">
+              <span class="course-badge">COURSE</span>
+              <h4>🐯 오늘을 위한 추천 코스</h4>
+            </div>
+            <div class="course-flow" id="course-flow">
+              <!-- Dynamically populated Step 1 & Step 2 -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter and List Controls -->
+      <section class="list-control-section">
+        <div class="control-header">
+          <h2 class="list-title"><span id="selected-keyword-title" class="highlight">밥약</span> 맛집 리스트</h2>
+          <span class="result-count" id="result-count">총 0개 검색됨</span>
+        </div>
+        
+        <!-- Live Search Bar -->
+        <div class="search-bar-container">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="맛집 이름, 대표 메뉴, 카테고리 또는 초성(예: ㅇㅊㅂㄱ) 검색..." class="search-input">
+            <button id="search-clear-btn" class="search-clear-btn hidden">&times;</button>
+          </div>
+        </div>
+
+        <div class="filters-container">
+          <div class="filter-group">
+            <label for="filter-location">위치</label>
+            <select id="filter-location" class="filter-select">
+              <option value="전체">전체 위치</option>
+              <option value="참살이길">참살이길</option>
+              <option value="개운사길">개운사길</option>
+              <option value="정문">정문</option>
+              <option value="이공대">이공대</option>
+              <option value="안암역">안암역</option>
+              <option value="안암오거리">안암오거리</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-category">카테고리</label>
+            <select id="filter-category" class="filter-select">
+              <option value="전체">전체 종류</option>
+              <option value="한식">한식</option>
+              <option value="일식">일식</option>
+              <option value="양식">양식</option>
+              <option value="중식">중식</option>
+              <option value="아시안">아시안</option>
+              <option value="디저트">디저트</option>
+              <option value="카페">카페</option>
+              <option value="한식/주점">한식/주점</option>
+              <option value="주점">주점</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="sort-by">정렬 기준</label>
+            <select id="sort-by" class="filter-select">
+              <option value="별점순">별점 높은 순 (★)</option>
+              <option value="이름순">가나다 이름 순</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Restaurant Cards Grid -->
+      <section class="restaurants-grid-section">
+        <div class="restaurants-grid" id="restaurants-grid">
+          <!-- Dynamically populated -->
+        </div>
+        <div class="empty-state hidden" id="empty-state">
+          <div class="empty-icon">🍽️</div>
+          <h3>해당하는 맛집이 없습니다.</h3>
+          <p>필터를 변경하거나 다른 키워드를 선택해 보세요!</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer-bar">
+      <p>© 2026 KU Foodie. 고려대학교 상징색 Crimson 에디션 (Web Version)</p>
+    </footer>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay hidden" id="detail-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+      <div class="modal-header-bg">
+        <span class="modal-category" id="modal-category">양식</span>
+        <h2 id="modal-name">어흥식당</h2>
+        <div class="modal-rating" id="modal-rating">★ 4.7</div>
+      </div>
+      <div class="modal-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">📍 위치</span>
+            <span class="info-value" id="modal-location">참살이길</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">🕒 브레이크 타임</span>
+            <span class="info-value" id="modal-breaktime">15:00 - 16:30</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">🍴 대표 메뉴</span>
+            <span class="info-value" id="modal-menu">어흥 스테이크</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">💵 가격대</span>
+            <span class="info-value" id="modal-price">1만원대</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">📞 연락처</span>
+            <span class="info-value" id="modal-phone">02-3291-1234</span>
+          </div>
+          <div class="info-item full-width keyword-tags-wrapper">
+            <span class="info-label">🏷️ 추천 키워드</span>
+            <div class="keyword-tags" id="modal-keywords">
+              <!-- Tags populated dynamically -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Map Search Links -->
+        <div class="modal-map-container">
+          <span class="info-label">🗺️ 외부 지도 연동</span>
+          <div class="map-buttons">
+            <a href="#" id="btn-naver-map" class="btn btn-map-naver" target="_blank">
+              <span class="map-icon">🗺️</span> 네이버 지도 검색
+            </a>
+            <a href="#" id="btn-kakao-map" class="btn btn-map-kakao" target="_blank">
+              <span class="map-icon">💛</span> 카카오 맵 검색
+            </a>
+          </div>
+        </div>
+        
+        <div class="modal-recommendation-box">
+          <h3>💡 선배들의 정성스러운 추천 이유</h3>
+          <p id="modal-reason">
+            뜨거운 철판에 서빙되는 합리적인 가격의 프리미엄 스테이크. 밥약 장소로 선배가 밥 살 때 생색내기 좋고 혼자 고기 썰기에도 제격입니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
